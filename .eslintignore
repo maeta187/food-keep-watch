@@ -1,0 +1,5 @@
+node_modules
+.expo
+.husky/_
+dist
+build
