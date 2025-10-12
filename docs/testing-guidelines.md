@@ -2,10 +2,10 @@
 
 - 単体テストは `vitest` を使用し、ロジック寄りの関数や軽量なヘルパーからカバレッジを拡げる。
 - 実行コマンドは `bun run test`（一度だけ実行）と `bun run test:watch`（監視実行）。
-- カバレッジレポートを取得する場合は `bun run test:coverage` を利用し、`vitest.config.ts` の設定で V8 ベースのレポートが生成される。
+- カバレッジレポートを取得する場合は `bun run test --coverage`（または `bunx vitest run --coverage`）を利用し、`vitest.config.ts` の設定で V8 ベースのレポートが生成される。
   - 依存関係に `@vitest/coverage-v8` が含まれているため、初回は `bun install` を実行してプラグインを取得しておく。
-  - 標準出力にテキストサマリーが表示され、`coverage/` ディレクトリ配下に `lcov.info` と HTML レポートが出力される。
-  - ブラウザで `coverage/index.html` を開くと HTML レポートを確認できる。
+  - 標準出力には `text` レポート（ファイル単位の詳細）と `text-summary` レポート（総合値のみ）が表示される。
+  - `coverage/` ディレクトリには `lcov.info` と HTML レポートが出力され、`coverage/index.html` を開くとブラウザで確認できる。
 - 追加したファイルが TypeScript の型チェックを通るよう `vitest/globals` を `tsconfig.json` に登録済み。
 
 ## ネイティブ依存に関する注意
