@@ -48,6 +48,7 @@
 		"format": "bunx prettier --write .",
 		"format:check": "bunx prettier --check .",
 		"test": "bunx vitest run",
+		"test:coverage": "bunx vitest run --coverage",
 		"test:watch": "bunx vitest",
 		"prepare": "husky"
 	},
