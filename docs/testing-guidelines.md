@@ -2,6 +2,7 @@
 
 - 単体テストは `vitest` を使用し、ロジック寄りの関数や軽量なヘルパーからカバレッジを拡げる。
 - 実行コマンドは `bun run test`（一度だけ実行）と `bun run test:watch`（監視実行）。
+- カバレッジレポートを取得する場合は `bun run test:coverage` を利用し、`vitest.config.ts` の設定で V8 ベースのレポートが生成される。
 - 追加したファイルが TypeScript の型チェックを通るよう `vitest/globals` を `tsconfig.json` に登録済み。
 
 ## ネイティブ依存に関する注意
