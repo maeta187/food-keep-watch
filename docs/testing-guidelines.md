@@ -1,5 +1,7 @@
 # テスト方針
 
+開発環境のセットアップ手順は [`docs/development-setup.md`](./development-setup.md) を参照してください。テスト実行時は以下のポイントを押さえ、品質を保ちながら段階的にカバレッジを拡大します。
+
 - 単体テストは `vitest` を使用し、ロジック寄りの関数や軽量なヘルパーからカバレッジを拡げる。
 - 実行コマンドは `bun run test`（一度だけ実行）と `bun run test:watch`（監視実行）。
 - 追加したファイルが TypeScript の型チェックを通るよう `vitest/globals` を `tsconfig.json` に登録済み。
