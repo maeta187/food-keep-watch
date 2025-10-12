@@ -1,17 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
-export default function Tab() {
+import { UI_TEXT } from '../../constants/ui-text'
+
+export default function Tab(): JSX.Element {
 	return (
-		<View style={styles.container}>
-			<Text>Settings</Text>
+		<View className='flex-1 items-center justify-center bg-white'>
+			<Text className='text-base text-slate-900' selectable>
+				{UI_TEXT.tabs.settingsPlaceholder}
+			</Text>
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	}
-})
