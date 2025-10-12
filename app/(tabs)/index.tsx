@@ -1,9 +1,13 @@
 import { Text, View } from 'react-native'
 
-export default function Tab() {
+import { UI_TEXT } from '../../constants/ui-text'
+
+export default function Tab(): JSX.Element {
 	return (
-		<View className='flex-1 items-center justify-center bg-red-500'>
-			<Text>Home</Text>
+		<View className='flex-1 items-center justify-center bg-white'>
+			<Text className='text-base text-slate-900' selectable>
+				{UI_TEXT.tabs.homePlaceholder}
+			</Text>
 		</View>
 	)
 }
