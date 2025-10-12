@@ -5,10 +5,11 @@
   - `bun run test`: 一度だけ全テストを実行する。
   - `bun run test:watch`: ファイル変更を監視しながらテストを実行する。
   - `bun run test:coverage`: カバレッジ取得用のショートカットコマンド。
-- カバレッジレポートを取得する場合は `bun run test:coverage`（または `bunx vitest run --coverage`）を利用し、`vitest.config.ts` の設定で V8 ベースのレポートが生成される。
-  - 依存関係に `@vitest/coverage-v8` が含まれているため、初回は `bun install` を実行してプラグインを取得しておく。
-  - 標準出力には `text` レポート（ファイル単位の詳細）と `text-summary` レポート（総合値のみ）が表示される。
-  - `coverage/` ディレクトリには `lcov.info` と HTML レポートが出力され、`coverage/index.html` を開くとブラウザで確認できる。
+- カバレッジレポートを取得する場合は次の手順に従う。
+  1. 依存関係に `@vitest/coverage-v8` が含まれているため、初回は `bun install` を実行してプラグインを取得する。
+  2. `bun run test:coverage`（または `bunx vitest run --coverage`）を利用してテストとカバレッジ計測を同時に実行する。
+  3. 標準出力には `text` レポート（ファイル単位の詳細）と `text-summary` レポート（総合値のみ）が表示される。
+  4. `coverage/` ディレクトリには `lcov.info` と HTML レポートが出力される。`coverage/index.html` を開くとブラウザで詳細を確認できる。
 - 追加したファイルが TypeScript の型チェックを通るよう `vitest/globals` を `tsconfig.json` に登録済み。
 
 ## ネイティブ依存に関する注意
