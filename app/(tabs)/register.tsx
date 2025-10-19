@@ -9,13 +9,12 @@ import {
 	Text,
 	View
 } from 'react-native'
-import type { RegisterFormValues } from 'types/register-form'
+import { RegisterFormValues } from 'types'
 
 import { UI_TEXT } from '@/constants/ui-text'
 import { CategoryField } from '@/src/components/register/CategoryField'
 import { DateTimePickerSheet } from '@/src/components/register/DateTimePickerSheet'
 import { ExpirationTypeField } from '@/src/components/register/ExpirationTypeField'
-import { HeaderSection } from '@/src/components/register/HeaderSection'
 import { PickerField } from '@/src/components/register/PickerField'
 import { TextField } from '@/src/components/register/TextField'
 import {
@@ -47,7 +46,7 @@ export default function RegisterTab() {
 		}
 	})
 
-	const categories = watch('categories') ?? []
+	const categories: string[] = watch('categories') ?? []
 	const expirationDateIso = watch('expirationDate')
 	const notificationDateTimeIso = watch('notificationDateTime')
 
@@ -210,69 +209,83 @@ export default function RegisterTab() {
 				contentContainerStyle={{ paddingBottom: 32 }}
 				keyboardShouldPersistTaps='handled'
 			>
-				<View className='rounded-3xl bg-white'>
-					<HeaderSection />
-					<View className='space-y-6 px-4 py-6'>
-						<Controller
-							control={control}
-							name='name'
-							render={({ field: { value, onChange, onBlur } }) => (
-								<TextField
-									label={UI_TEXT.register.fields.name.label}
-									placeholder={UI_TEXT.register.fields.name.placeholder}
-									value={value}
-									error={errors.name?.message}
-									onChangeText={onChange}
-									onBlur={onBlur}
-								/>
-							)}
-						/>
-						<ExpirationTypeField
-							value={watch('expirationType')}
-							onChange={(value) => {
-								updateField('expirationType', value)
-							}}
-						/>
-						<PickerField
-							label={UI_TEXT.register.fields.expirationDate.label}
-							placeholder={UI_TEXT.register.fields.expirationDate.placeholder}
-							valueLabel={formattedExpirationDate}
-							icon='calendar'
-							error={errors.expirationDate?.message}
-							onPress={openExpirationPicker}
-						/>
-						<Controller
-							control={control}
-							name='storageLocation'
-							render={({ field: { value, onChange, onBlur } }) => (
-								<TextField
-									label={UI_TEXT.register.fields.storage.label}
-									placeholder={UI_TEXT.register.fields.storage.placeholder}
-									value={value ?? ''}
-									onChangeText={onChange}
-									onBlur={onBlur}
-								/>
-							)}
-						/>
-						<CategoryField
-							values={categories}
-							inputValue={categoryInput}
-							onInputChange={setCategoryInput}
-							onAdd={addCategory}
-							onRemove={removeCategory}
-							onSelectSuggestion={selectCategorySuggestion}
-							suggestions={SUGGESTED_CATEGORIES}
-							errorMessage={categoryError ?? undefined}
-						/>
-						<PickerField
-							label={UI_TEXT.register.fields.notificationTime.label}
-							placeholder={UI_TEXT.register.fields.notificationTime.placeholder}
-							valueLabel={formattedNotificationDateTime}
-							icon='clock-o'
-							onPress={openNotificationPicker}
-						/>
+				<View className='bg-white'>
+					{/* <HeaderSection /> */}
+					<View className='px-4'>
+						<View>
+							<Controller
+								control={control}
+								name='name'
+								render={({ field: { value, onChange, onBlur } }) => (
+									<TextField
+										label={UI_TEXT.register.fields.name.label}
+										placeholder={UI_TEXT.register.fields.name.placeholder}
+										value={value}
+										error={errors.name?.message}
+										onChangeText={onChange}
+										onBlur={onBlur}
+									/>
+								)}
+							/>
+						</View>
+						<View className='pt-4'>
+							<ExpirationTypeField
+								value={watch('expirationType')}
+								onChange={(value) => {
+									updateField('expirationType', value)
+								}}
+							/>
+						</View>
+						<View className='pt-4'>
+							<PickerField
+								label={UI_TEXT.register.fields.expirationDate.label}
+								placeholder={UI_TEXT.register.fields.expirationDate.placeholder}
+								valueLabel={formattedExpirationDate}
+								icon='calendar'
+								error={errors.expirationDate?.message}
+								onPress={openExpirationPicker}
+							/>
+						</View>
+						<View className='pt-4'>
+							<Controller
+								control={control}
+								name='storageLocation'
+								render={({ field: { value, onChange, onBlur } }) => (
+									<TextField
+										label={UI_TEXT.register.fields.storage.label}
+										placeholder={UI_TEXT.register.fields.storage.placeholder}
+										value={value ?? ''}
+										onChangeText={onChange}
+										onBlur={onBlur}
+									/>
+								)}
+							/>
+						</View>
+						<View className='pt-4'>
+							<CategoryField
+								values={categories}
+								inputValue={categoryInput}
+								onInputChange={setCategoryInput}
+								onAdd={addCategory}
+								onRemove={removeCategory}
+								onSelectSuggestion={selectCategorySuggestion}
+								suggestions={SUGGESTED_CATEGORIES}
+								errorMessage={categoryError ?? undefined}
+							/>
+						</View>
+						<View className='pt-4'>
+							<PickerField
+								label={UI_TEXT.register.fields.notificationTime.label}
+								placeholder={
+									UI_TEXT.register.fields.notificationTime.placeholder
+								}
+								valueLabel={formattedNotificationDateTime}
+								icon='clock-o'
+								onPress={openNotificationPicker}
+							/>
+						</View>
 					</View>
-					<View className='px-4 pb-6'>
+					<View className='p-6'>
 						<Pressable
 							className='rounded-full bg-blue-600 py-4'
 							onPress={onSubmit}
