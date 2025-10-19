@@ -41,8 +41,8 @@ export function TextField({
 				onBlur={onBlur}
 				cursorColor='#2563eb'
 				returnKeyType='done'
-				textAlignVertical='center'
-				style={{ paddingTop: 0, paddingBottom: 0, height: 48, lineHeight: 48 }}
+				textAlignVertical='top'
+				style={{ paddingTop: 0, paddingBottom: 0 }}
 			/>
 			{error ? <Text className='text-xs text-red-500'>{error}</Text> : null}
 		</>

@@ -65,12 +65,10 @@ export function CategoryField({
 					onBlur={onAdd}
 					cursorColor='#2563eb'
 					returnKeyType='done'
-					textAlignVertical='center'
+					textAlignVertical='top'
 					style={{
 						paddingTop: 0,
-						paddingBottom: 0,
-						height: 48,
-						lineHeight: 48
+						paddingBottom: 0
 					}}
 				/>
 				{errorMessage ? (
