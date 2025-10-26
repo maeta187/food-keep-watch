@@ -29,6 +29,8 @@ export function DateTimePickerSheet({
 }: Props) {
 	if (!visible) return null
 
+	const isWeb = Platform.OS === 'web'
+
 	/**
 	 * ピッカーの選択結果を受けとり暫定日時を更新する。
 	 */
@@ -48,6 +50,36 @@ export function DateTimePickerSheet({
 					style: { alignSelf: 'stretch' }
 				} as const)
 			: undefined
+
+	if (isWeb) {
+		return (
+			<Modal
+				visible={visible}
+				transparent
+				animationType='fade'
+				onRequestClose={onCancel}
+			>
+				<View className='flex-1 justify-end bg-slate-900/40'>
+					<View className='rounded-t-3xl bg-white px-5 py-6'>
+						<Text className='text-base font-semibold text-slate-900'>
+							{UI_TEXT.register.errors.webPickerUnsupported}
+						</Text>
+						<View className='mt-4 flex-row justify-end'>
+							<Pressable
+								className='rounded-full bg-slate-900 px-5 py-2'
+								onPress={onCancel}
+								accessibilityRole='button'
+							>
+								<Text className='text-sm font-semibold text-white'>
+									{UI_TEXT.register.actions.cancel}
+								</Text>
+							</Pressable>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		)
+	}
 
 	return (
 		<Modal
