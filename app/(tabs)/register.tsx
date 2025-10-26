@@ -1,0 +1,281 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
+import {
+	KeyboardAvoidingView,
+	Platform,
+	Pressable,
+	ScrollView,
+	Text,
+	View
+} from 'react-native'
+import { RegisterFormValues } from 'types'
+
+import { UI_TEXT } from '@/constants/ui-text'
+import { CategoryField } from '@/src/components/register/CategoryField'
+import { DateTimePickerSheet } from '@/src/components/register/DateTimePickerSheet'
+import { ExpirationTypeField } from '@/src/components/register/ExpirationTypeField'
+import { PickerField } from '@/src/components/register/PickerField'
+import { TextField } from '@/src/components/register/TextField'
+import {
+	MAX_CATEGORIES,
+	SUGGESTED_CATEGORIES
+} from '@/src/constants/categories'
+import { createCategoryHandlers } from '@/src/features/register/category-handlers'
+import { registerFormSchema } from '@/src/schemas/register-form'
+import { formatDate, formatDateTime } from '@/utils/date-format'
+
+/**
+ * 賞味期限登録フォームのタブ画面を描画する。
+ */
+export default function RegisterTab() {
+	const {
+		control,
+		handleSubmit,
+		watch,
+		setValue,
+		formState: { errors }
+	} = useForm<RegisterFormValues>({
+		resolver: zodResolver(registerFormSchema),
+		defaultValues: {
+			name: '',
+			expirationType: 'bestBefore',
+			expirationDate: '',
+			storageLocation: '',
+			categories: [],
+			notificationDateTime: ''
+		}
+	})
+
+	const categories: string[] = useWatch({ control, name: 'categories' }) ?? []
+	const expirationDateIso = watch('expirationDate')
+	const notificationDateTimeIso = watch('notificationDateTime')
+
+	const [categoryInput, setCategoryInput] = useState('')
+	const [categoryError, setCategoryError] = useState<string | null>(null)
+	const [isExpirationPickerVisible, setExpirationPickerVisible] =
+		useState(false)
+	const [pendingExpirationDate, setPendingExpirationDate] = useState<Date>(
+		new Date()
+	)
+	const [isNotificationPickerVisible, setNotificationPickerVisible] =
+		useState(false)
+	const [pendingNotificationDate, setPendingNotificationDate] = useState<Date>(
+		new Date()
+	)
+
+	const formattedExpirationDate = formatDate(
+		expirationDateIso ? new Date(expirationDateIso) : undefined
+	)
+	const formattedNotificationDateTime = formatDateTime(
+		notificationDateTimeIso ? new Date(notificationDateTimeIso) : undefined
+	)
+
+	/**
+	 * フォームステートの指定フィールドを更新する。
+	 *
+	 * @param key 更新対象のフィールドキー
+	 * @param value 設定する値
+	 */
+	const updateField = <K extends keyof RegisterFormValues>(
+		key: K,
+		value: RegisterFormValues[K]
+	) => {
+		setValue(key, value as any, { shouldDirty: true, shouldValidate: true })
+	}
+
+	/**
+	 * react-hook-form 経由で送信された値を整形する。
+	 *
+	 * @param values バリデーション済みのフォーム値
+	 */
+	const handleValidSubmit = (values: RegisterFormValues) => {
+		const payload = {
+			name: values.name.trim(),
+			expirationType: values.expirationType,
+			expirationDate: new Date(values.expirationDate),
+			storageLocation: values.storageLocation?.trim() ?? '',
+			categories: values.categories,
+			notificationDateTime: values.notificationDateTime
+				? new Date(values.notificationDateTime)
+				: undefined
+		}
+
+		console.log(payload)
+	}
+
+	/**
+	 * 期限日ピッカーを開く際に暫定値を初期化する。
+	 */
+	const openExpirationPicker = () => {
+		setPendingExpirationDate(
+			expirationDateIso ? new Date(expirationDateIso) : new Date()
+		)
+		setExpirationPickerVisible(true)
+	}
+
+	/**
+	 * 期限日ピッカーで選択した値をフォームに反映する。
+	 */
+	const confirmExpirationPicker = () => {
+		updateField('expirationDate', pendingExpirationDate.toISOString())
+		setExpirationPickerVisible(false)
+	}
+
+	/**
+	 * 通知日時ピッカーを開く際に暫定値を初期化する。
+	 */
+	const openNotificationPicker = () => {
+		setPendingNotificationDate(
+			notificationDateTimeIso ? new Date(notificationDateTimeIso) : new Date()
+		)
+		setNotificationPickerVisible(true)
+	}
+
+	/**
+	 * 通知日時ピッカーで選択した値をフォームに反映する。
+	 */
+	const confirmNotificationPicker = () => {
+		updateField('notificationDateTime', pendingNotificationDate.toISOString())
+		setNotificationPickerVisible(false)
+	}
+
+	const { addCategory, removeCategory, selectCategorySuggestion } =
+		createCategoryHandlers({
+			categories,
+			categoryInput,
+			maxCategories: MAX_CATEGORIES,
+			limitErrorMessage: UI_TEXT.register.errors.categoryLimit,
+			setCategoryInput,
+			setCategoryError,
+			updateCategories: (nextCategories) => {
+				updateField('categories', nextCategories)
+			}
+		})
+
+	const onSubmit = handleSubmit(handleValidSubmit)
+
+	return (
+		<KeyboardAvoidingView
+			className='flex-1 bg-white'
+			behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+		>
+			<ScrollView
+				className='flex-1 bg-white px-4 py-8'
+				contentContainerStyle={{ paddingBottom: 32 }}
+				keyboardShouldPersistTaps='handled'
+			>
+				<View className='bg-white'>
+					{/* <HeaderSection /> */}
+					<View className='px-4'>
+						<View>
+							<Controller
+								control={control}
+								name='name'
+								render={({ field: { value, onChange, onBlur } }) => (
+									<TextField
+										label={UI_TEXT.register.fields.name.label}
+										placeholder={UI_TEXT.register.fields.name.placeholder}
+										value={value}
+										error={errors.name?.message}
+										onChangeText={onChange}
+										onBlur={onBlur}
+									/>
+								)}
+							/>
+						</View>
+						<View className='pt-4'>
+							<ExpirationTypeField
+								value={watch('expirationType')}
+								onChange={(value) => {
+									updateField('expirationType', value)
+								}}
+							/>
+						</View>
+						<View className='pt-4'>
+							<PickerField
+								label={UI_TEXT.register.fields.expirationDate.label}
+								placeholder={UI_TEXT.register.fields.expirationDate.placeholder}
+								valueLabel={formattedExpirationDate}
+								icon='calendar'
+								error={errors.expirationDate?.message}
+								onPress={openExpirationPicker}
+							/>
+						</View>
+						<View className='pt-4'>
+							<Controller
+								control={control}
+								name='storageLocation'
+								render={({ field: { value, onChange, onBlur } }) => (
+									<TextField
+										label={UI_TEXT.register.fields.storage.label}
+										placeholder={UI_TEXT.register.fields.storage.placeholder}
+										value={value ?? ''}
+										onChangeText={onChange}
+										onBlur={onBlur}
+									/>
+								)}
+							/>
+						</View>
+						<View className='pt-4'>
+							<CategoryField
+								values={categories}
+								inputValue={categoryInput}
+								onInputChange={setCategoryInput}
+								onAdd={addCategory}
+								onRemove={removeCategory}
+								onSelectSuggestion={selectCategorySuggestion}
+								suggestions={SUGGESTED_CATEGORIES}
+								errorMessage={categoryError ?? undefined}
+							/>
+						</View>
+						<View className='pt-4'>
+							<PickerField
+								label={UI_TEXT.register.fields.notificationTime.label}
+								placeholder={
+									UI_TEXT.register.fields.notificationTime.placeholder
+								}
+								valueLabel={formattedNotificationDateTime}
+								icon='clock-o'
+								onPress={openNotificationPicker}
+							/>
+						</View>
+					</View>
+					<View className='p-6'>
+						<Pressable
+							className='rounded-full bg-blue-600 py-4'
+							onPress={onSubmit}
+							accessibilityRole='button'
+						>
+							<Text className='text-center text-base font-semibold text-white'>
+								{UI_TEXT.register.actions.submit}
+							</Text>
+						</Pressable>
+					</View>
+				</View>
+			</ScrollView>
+
+			<DateTimePickerSheet
+				mode='date'
+				visible={isExpirationPickerVisible}
+				value={pendingExpirationDate}
+				onChange={setPendingExpirationDate}
+				onCancel={() => {
+					setExpirationPickerVisible(false)
+				}}
+				onConfirm={confirmExpirationPicker}
+			/>
+
+			<DateTimePickerSheet
+				mode='datetime'
+				visible={isNotificationPickerVisible}
+				value={pendingNotificationDate}
+				onChange={setPendingNotificationDate}
+				onCancel={() => {
+					setNotificationPickerVisible(false)
+				}}
+				onConfirm={confirmNotificationPicker}
+			/>
+		</KeyboardAvoidingView>
+	)
+}

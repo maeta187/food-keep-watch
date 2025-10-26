@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Tabs } from 'expo-router'
 
-import { UI_TEXT } from '../../constants/ui-text'
+import { UI_TEXT } from '@/constants/ui-text'
 
 export default function TabLayout() {
 	return (
@@ -12,6 +12,15 @@ export default function TabLayout() {
 					title: UI_TEXT.tabs.homeTitle,
 					tabBarIcon: ({ color }) => (
 						<FontAwesome size={28} name='home' color={color} />
+					)
+				}}
+			/>
+			<Tabs.Screen
+				name='register'
+				options={{
+					title: UI_TEXT.tabs.registerTitle,
+					tabBarIcon: ({ color }) => (
+						<FontAwesome size={28} name='plus' color={color} />
 					)
 				}}
 			/>
