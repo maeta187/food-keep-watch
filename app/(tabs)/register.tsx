@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import {
 	KeyboardAvoidingView,
 	Platform,
@@ -47,7 +47,7 @@ export default function RegisterTab() {
 		}
 	})
 
-	const categories: string[] = watch('categories') ?? []
+	const categories: string[] = useWatch({ control, name: 'categories' }) ?? []
 	const expirationDateIso = watch('expirationDate')
 	const notificationDateTimeIso = watch('notificationDateTime')
 
