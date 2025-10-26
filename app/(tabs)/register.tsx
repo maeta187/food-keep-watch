@@ -21,6 +21,7 @@ import {
 	MAX_CATEGORIES,
 	SUGGESTED_CATEGORIES
 } from '@/src/constants/categories'
+import { createCategoryHandlers } from '@/src/features/register/category-handlers'
 import { registerFormSchema } from '@/src/schemas/register-form'
 import { formatDate, formatDateTime } from '@/utils/date-format'
 
@@ -139,63 +140,18 @@ export default function RegisterTab() {
 		setNotificationPickerVisible(false)
 	}
 
-	/**
-	 * カテゴリー入力欄の文字列をタグとして追加する。
-	 */
-	const addCategory = () => {
-		const trimmed = categoryInput.trim()
-		if (!trimmed) {
-			setCategoryInput('')
-			return
-		}
-
-		if (categories.length >= MAX_CATEGORIES) {
-			setCategoryError(UI_TEXT.register.errors.categoryLimit)
-			setCategoryInput('')
-			return
-		}
-
-		if (categories.includes(trimmed)) {
-			setCategoryError(null)
-			setCategoryInput('')
-			return
-		}
-
-		updateField('categories', [...categories, trimmed])
-		setCategoryError(null)
-		setCategoryInput('')
-	}
-
-	/**
-	 * 指定したカテゴリータグを削除する。
-	 *
-	 * @param category 削除対象のカテゴリー
-	 */
-	const removeCategory = (category: string) => {
-		updateField(
-			'categories',
-			categories.filter((item) => item !== category)
-		)
-		setCategoryError(null)
-	}
-
-	/**
-	 * サジェスト一覧からカテゴリーを追加する。
-	 *
-	 * @param category 追加するカテゴリー
-	 */
-	const selectCategorySuggestion = (category: string) => {
-		if (categories.length >= MAX_CATEGORIES) {
-			setCategoryError(UI_TEXT.register.errors.categoryLimit)
-			return
-		}
-		if (categories.includes(category)) {
-			setCategoryError(null)
-			return
-		}
-		updateField('categories', [...categories, category])
-		setCategoryError(null)
-	}
+	const { addCategory, removeCategory, selectCategorySuggestion } =
+		createCategoryHandlers({
+			categories,
+			categoryInput,
+			maxCategories: MAX_CATEGORIES,
+			limitErrorMessage: UI_TEXT.register.errors.categoryLimit,
+			setCategoryInput,
+			setCategoryError,
+			updateCategories: (nextCategories) => {
+				updateField('categories', nextCategories)
+			}
+		})
 
 	const onSubmit = handleSubmit(handleValidSubmit)
 
