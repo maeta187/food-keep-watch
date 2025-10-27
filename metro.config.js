@@ -12,4 +12,4 @@ config.resolver.alias = {
 	types: path.join(projectRoot, 'src/types')
 }
 
-module.exports = withNativeWind(config, { input: './global.css' })
+module.exports = withNativeWind(config, { input: './src/global.css' })
