@@ -3,7 +3,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker'
 import { Modal, Platform, Pressable, Text, View } from 'react-native'
 
-import { UI_TEXT } from '@/constants/ui-text'
+import { UI_TEXT } from '@/src/constants/ui-text'
 
 type Props = {
 	visible: boolean

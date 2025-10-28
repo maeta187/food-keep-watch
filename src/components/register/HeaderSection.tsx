@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native'
 
-import { UI_TEXT } from '@/constants/ui-text'
+import { UI_TEXT } from '@/src/constants/ui-text'
 
 /**
  * フォームのヘッダーセクションを描画する。

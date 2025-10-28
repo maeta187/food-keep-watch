@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import { RegisterFormValues } from 'types'
 
-import { UI_TEXT } from '@/constants/ui-text'
 import { CategoryField } from '@/src/components/register/CategoryField'
 import { DateTimePickerSheet } from '@/src/components/register/DateTimePickerSheet'
 import { ExpirationTypeField } from '@/src/components/register/ExpirationTypeField'
@@ -21,6 +20,7 @@ import {
 	MAX_CATEGORIES,
 	SUGGESTED_CATEGORIES
 } from '@/src/constants/categories'
+import { UI_TEXT } from '@/src/constants/ui-text'
 import { createCategoryHandlers } from '@/src/features/register/category-handlers'
 import { registerFormSchema } from '@/src/schemas/register-form'
 import { formatDate, formatDateTime } from '@/src/utils/date-format'
