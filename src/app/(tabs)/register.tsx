@@ -23,7 +23,7 @@ import {
 } from '@/src/constants/categories'
 import { createCategoryHandlers } from '@/src/features/register/category-handlers'
 import { registerFormSchema } from '@/src/schemas/register-form'
-import { formatDate, formatDateTime } from '@/utils/date-format'
+import { formatDate, formatDateTime } from '@/src/utils/date-format'
 
 /**
  * 賞味期限登録フォームのタブ画面を描画する。
