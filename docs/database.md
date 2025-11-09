@@ -21,6 +21,8 @@ await db.insert(foods).values({ name: '牛乳', ... })
 | --------------------- | ------------------------------------------------------------------ |
 | `bun run db:generate` | `drizzle.config.ts` を参照してマイグレーションファイルを生成します |
 
+`db:generate` を実行すると、`drizzle/0000_*.sql` のほか、適用済み履歴を持つ `drizzle/meta/_journal.json` とスキーマスナップショットの `drizzle/meta/*_snapshot.json` が更新されます。これらをコミットしておくと、`expo-sqlite` 上で Drizzle の `migrate()` が同じ状態を再現できます。
+
 `drizzle` ディレクトリ以下にマイグレーションファイルが出力されます。Expo SQLite では CLI の `push` が利用できないため、アプリ起動時に `src/database/client.ts` が自動でマイグレーションを適用します。`schema.ts` を更新したら `db:generate` を実行し、アプリを再起動して反映してください。
 
 ## シードデータ投入
