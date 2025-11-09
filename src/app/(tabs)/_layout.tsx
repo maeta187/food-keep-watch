@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Tabs } from 'expo-router'
 
-import { UI_TEXT } from '@/constants/ui-text'
+import { UI_TEXT } from '@/src/constants/ui-text'
 
 export default function TabLayout() {
 	return (

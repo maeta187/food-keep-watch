@@ -1,6 +1,6 @@
 import { Pressable, Text, TextInput, View } from 'react-native'
 
-import { UI_TEXT } from '@/constants/ui-text'
+import { UI_TEXT } from '@/src/constants/ui-text'
 
 const placeholderColor = '#94a3b8'
 type Props = {
