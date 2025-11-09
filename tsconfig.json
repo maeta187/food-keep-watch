@@ -3,7 +3,7 @@
 	"compilerOptions": {
 		"strict": true,
 		"baseUrl": ".",
-		"types": ["vitest/globals"],
+		"types": ["vitest/globals", "bun-types"],
 		"paths": {
 			"@/*": ["./*"],
 			"types": ["./src/types/index.ts"],
