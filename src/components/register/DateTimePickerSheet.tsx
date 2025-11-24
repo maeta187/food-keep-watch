@@ -1,6 +1,7 @@
 import DateTimePicker, {
 	DateTimePickerEvent
 } from '@react-native-community/datetimepicker'
+import React from 'react'
 import { Modal, Platform, Pressable, Text, View } from 'react-native'
 
 import { UI_TEXT } from '@/src/constants/ui-text'
