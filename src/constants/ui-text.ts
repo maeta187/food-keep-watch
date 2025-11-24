@@ -47,12 +47,17 @@ export const UI_TEXT = {
 			confirm: '決定',
 			submit: '登録する'
 		},
+		messages: {
+			submitSuccessTitle: '登録が完了しました',
+			submitSuccessDescription: '食品を保存しました。'
+		},
 		errors: {
 			required: '必須項目です。',
 			expirationRequired: '期限日を選択してください。',
 			categoryLimit: 'カテゴリーは最大5件までです。',
 			webPickerUnsupported:
-				'Web 版では日付ピッカーを利用できません。iOS 端末で設定してください。'
+				'Web 版では日付ピッカーを利用できません。iOS 端末で設定してください。',
+			submitFailed: '登録に失敗しました。時間をおいてから再度お試しください。'
 		}
 	}
 } as const

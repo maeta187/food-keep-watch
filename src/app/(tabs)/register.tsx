@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import {
+	Alert,
 	KeyboardAvoidingView,
 	Platform,
 	Pressable,
@@ -22,8 +23,18 @@ import {
 } from '@/src/constants/categories'
 import { UI_TEXT } from '@/src/constants/ui-text'
 import { createCategoryHandlers } from '@/src/features/register/category-handlers'
+import { saveFood } from '@/src/features/register/save-food'
 import { registerFormSchema } from '@/src/schemas/register-form'
 import { formatDate, formatDateTime } from '@/src/utils/date-format'
+
+const defaultRegisterValues: RegisterFormValues = {
+	name: '',
+	expirationType: 'bestBefore',
+	expirationDate: '',
+	storageLocation: '',
+	categories: [],
+	notificationDateTime: ''
+}
 
 /**
  * 賞味期限登録フォームのタブ画面を描画する。
@@ -34,17 +45,11 @@ export default function RegisterTab() {
 		handleSubmit,
 		watch,
 		setValue,
-		formState: { errors }
+		reset,
+		formState: { errors, isSubmitting }
 	} = useForm<RegisterFormValues>({
 		resolver: zodResolver(registerFormSchema),
-		defaultValues: {
-			name: '',
-			expirationType: 'bestBefore',
-			expirationDate: '',
-			storageLocation: '',
-			categories: [],
-			notificationDateTime: ''
-		}
+		defaultValues: defaultRegisterValues
 	})
 
 	const categories: string[] = useWatch({ control, name: 'categories' }) ?? []
@@ -89,19 +94,25 @@ export default function RegisterTab() {
 	 *
 	 * @param values バリデーション済みのフォーム値
 	 */
-	const handleValidSubmit = (values: RegisterFormValues) => {
-		const payload = {
-			name: values.name.trim(),
-			expirationType: values.expirationType,
-			expirationDate: new Date(values.expirationDate),
-			storageLocation: values.storageLocation?.trim() ?? '',
-			categories: values.categories,
-			notificationDateTime: values.notificationDateTime
-				? new Date(values.notificationDateTime)
-				: undefined
+	const handleValidSubmit = async (values: RegisterFormValues) => {
+		try {
+			await saveFood(values)
+			reset(defaultRegisterValues)
+			setCategoryInput('')
+			setCategoryError(null)
+			setPendingExpirationDate(new Date())
+			setPendingNotificationDate(new Date())
+			Alert.alert(
+				UI_TEXT.register.messages.submitSuccessTitle,
+				UI_TEXT.register.messages.submitSuccessDescription
+			)
+		} catch (error) {
+			console.error('食品登録に失敗しました', error)
+			Alert.alert(UI_TEXT.register.errors.submitFailed)
+		} finally {
+			setExpirationPickerVisible(false)
+			setNotificationPickerVisible(false)
 		}
-
-		console.log(payload)
 	}
 
 	/**
@@ -243,9 +254,12 @@ export default function RegisterTab() {
 					</View>
 					<View className='p-6'>
 						<Pressable
-							className='rounded-full bg-blue-600 py-4'
+							className={`rounded-full bg-blue-600 py-4 ${
+								isSubmitting ? 'opacity-60' : ''
+							}`}
 							onPress={onSubmit}
 							accessibilityRole='button'
+							disabled={isSubmitting}
 						>
 							<Text className='text-center text-base font-semibold text-white'>
 								{UI_TEXT.register.actions.submit}
