@@ -13,8 +13,8 @@ config.resolver.alias = {
 	types: path.join(projectRoot, 'src/types')
 }
 
-// Allow Metro to load Drizzle SQL migration files as plain text modules.
-config.resolver.assetExts = (assetExts ?? []).filter((ext) => ext !== 'sql')
-config.resolver.sourceExts = [...(sourceExts ?? []), 'sql']
+// Treat Drizzle SQL migration files as assets (raw text) so Metro doesn't try to parse them as JS.
+config.resolver.assetExts = [...(assetExts ?? []), 'sql']
+config.resolver.sourceExts = (sourceExts ?? []).filter((ext) => ext !== 'sql')
 
 module.exports = withNativeWind(config, { input: './src/global.css' })
