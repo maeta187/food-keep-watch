@@ -19,9 +19,10 @@ import { PickerField } from '@/src/components/register/PickerField'
 import { TextField } from '@/src/components/register/TextField'
 import {
 	MAX_CATEGORIES,
-	SUGGESTED_CATEGORIES
+	MAX_SAVED_CATEGORIES
 } from '@/src/constants/categories'
 import { UI_TEXT } from '@/src/constants/ui-text'
+import { useCategorySuggestions } from '@/src/features/categories/use-category-suggestions'
 import { createCategoryHandlers } from '@/src/features/register/category-handlers'
 import { saveFood } from '@/src/features/register/save-food'
 import { registerFormSchema } from '@/src/schemas/register-form'
@@ -75,6 +76,8 @@ export default function RegisterTab() {
 	const formattedNotificationDateTime = formatDateTime(
 		notificationDateTimeIso ? new Date(notificationDateTimeIso) : undefined
 	)
+	const { suggestions: categorySuggestions, persistCategory } =
+		useCategorySuggestions()
 
 	/**
 	 * フォームステートの指定フィールドを更新する。
@@ -157,11 +160,22 @@ export default function RegisterTab() {
 			categoryInput,
 			maxCategories: MAX_CATEGORIES,
 			limitErrorMessage: UI_TEXT.register.errors.categoryLimit,
+			storageLimitErrorMessage: UI_TEXT.register.errors.categoryStorageLimit,
 			setCategoryInput,
 			setCategoryError,
 			updateCategories: (nextCategories) => {
 				updateField('categories', nextCategories)
-			}
+			},
+			validateBeforeAdd: (candidate) => {
+				if (
+					!categorySuggestions.includes(candidate) &&
+					categorySuggestions.length >= MAX_SAVED_CATEGORIES
+				) {
+					return UI_TEXT.register.errors.categoryStorageLimit
+				}
+				return null
+			},
+			onNewCategoryAdded: persistCategory
 		})
 
 	const onSubmit = handleSubmit(handleValidSubmit)
@@ -236,7 +250,7 @@ export default function RegisterTab() {
 								onAdd={addCategory}
 								onRemove={removeCategory}
 								onSelectSuggestion={selectCategorySuggestion}
-								suggestions={SUGGESTED_CATEGORIES}
+								suggestions={categorySuggestions}
 								errorMessage={categoryError ?? undefined}
 							/>
 						</View>

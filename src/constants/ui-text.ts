@@ -55,6 +55,7 @@ export const UI_TEXT = {
 			required: '必須項目です。',
 			expirationRequired: '期限日を選択してください。',
 			categoryLimit: 'カテゴリーは最大5件までです。',
+			categoryStorageLimit: 'カテゴリー候補は最大15件までです。',
 			webPickerUnsupported:
 				'Web 版では日付ピッカーを利用できません。iOS 端末で設定してください。',
 			submitFailed: '登録に失敗しました。時間をおいてから再度お試しください。'

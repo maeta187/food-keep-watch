@@ -1,3 +1,4 @@
+import React from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 
 import { UI_TEXT } from '@/src/constants/ui-text'
