@@ -20,9 +20,16 @@ const main = async () => {
 	const sqlite = new Database(DB_PATH)
 	sqlite.exec('PRAGMA journal_mode = WAL;')
 
-	const orderedMigrations = Object.keys(migrations.migrations)
-		.sort()
-		.map((key) => migrations.migrations[key])
+	const orderedMigrations = migrations.journal.entries.map(({ tag }) => {
+		const key = `m${tag.slice(0, 4)}`
+		const migration = migrations.migrations[key]
+
+		if (!migration) {
+			throw new Error(`Missing migration for tag ${tag}`)
+		}
+
+		return migration
+	})
 
 	orderedMigrations.forEach((sql) => {
 		sqlite.exec(sql)
