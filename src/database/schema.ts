@@ -19,3 +19,18 @@ export const foods = sqliteTable('foods', {
 
 export type Food = typeof foods.$inferSelect
 export type NewFood = typeof foods.$inferInsert
+
+export const categories = sqliteTable('categories', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull().unique(),
+	visible: integer('visible', { mode: 'boolean' }).notNull().default(true),
+	createdAt: integer('created_at')
+		.notNull()
+		.default(sql`(unixepoch())`),
+	updatedAt: integer('updated_at')
+		.notNull()
+		.default(sql`(unixepoch())`)
+})
+
+export type Category = typeof categories.$inferSelect
+export type NewCategory = typeof categories.$inferInsert

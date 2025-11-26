@@ -3,13 +3,20 @@ type CategoryHandlersParams = {
 	categoryInput: string
 	maxCategories: number
 	limitErrorMessage: string
+	storageLimitErrorMessage?: string
 	setCategoryInput: (value: string) => void
 	setCategoryError: (value: string | null) => void
 	updateCategories: (next: string[]) => void
+	onNewCategoryAdded?: (
+		category: string
+	) => Promise<boolean | void> | boolean | void
+	validateBeforeAdd?: (
+		category: string
+	) => Promise<string | null> | string | null
 }
 
 type CategoryHandlers = {
-	addCategory: () => void
+	addCategory: () => Promise<void>
 	removeCategory: (category: string) => void
 	selectCategorySuggestion: (category: string) => void
 }
@@ -37,13 +44,25 @@ export const createCategoryHandlers = ({
 	categoryInput,
 	maxCategories,
 	limitErrorMessage,
+	storageLimitErrorMessage,
 	setCategoryInput,
 	setCategoryError,
-	updateCategories
+	updateCategories,
+	onNewCategoryAdded,
+	validateBeforeAdd
 }: CategoryHandlersParams): CategoryHandlers => {
-	const addCategory = () => {
+	const addCategory = async () => {
 		const trimmed = categoryInput.trim()
 		if (!trimmed) {
+			resetInput(setCategoryInput)
+			return
+		}
+
+		const validationError = validateBeforeAdd
+			? await validateBeforeAdd(trimmed)
+			: null
+		if (validationError) {
+			setCategoryError(validationError)
 			resetInput(setCategoryInput)
 			return
 		}
@@ -63,6 +82,13 @@ export const createCategoryHandlers = ({
 		updateCategories([...categories, trimmed])
 		setCategoryError(null)
 		resetInput(setCategoryInput)
+		if (onNewCategoryAdded) {
+			const result = await onNewCategoryAdded(trimmed)
+			// 挿入が拒否された場合はエラー表示のみ行う（フォームの値は維持）
+			if (result === false) {
+				setCategoryError(storageLimitErrorMessage ?? limitErrorMessage)
+			}
+		}
 	}
 
 	const removeCategory = (category: string) => {
