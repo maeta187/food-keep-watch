@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 const DRIZZLE_DIR = path.resolve('drizzle')
@@ -23,7 +23,6 @@ const convertSqlMigrations = () => {
 
 		const sqlContent = readFileSync(sqlPath, 'utf8')
 		writeFileSync(tsPath, wrapAsTsModule(sqlContent))
-		rmSync(sqlPath)
 	})
 }
 
