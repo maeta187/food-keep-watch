@@ -1,6 +1,7 @@
 # テスト方針
 
 - 単体テストは `vitest` を使用し、ロジック寄りの関数や軽量なヘルパーからカバレッジを拡げる。
+- React/React Native コンポーネントのユニットテストは `@testing-library/react` を用い、JSDOM 上で動くように `test/mocks/` のネイティブモックを活用する。
 - 実行コマンドは以下を使用する。
   - `bun run test`: 一度だけ全テストを実行する。
   - `bun run test:watch`: ファイル変更を監視しながらテストを実行する。
