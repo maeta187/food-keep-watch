@@ -1,11 +1,44 @@
 export const UI_TEXT = {
 	appEditingHint: 'アプリの編集は App.tsx から始められます。',
 	tabs: {
-		homeTitle: 'ホーム',
+		homeTitle: '期限一覧',
 		registerTitle: '期限登録',
 		settingsTitle: '設定',
-		homePlaceholder: 'ホーム画面のコンテンツを実装してください。',
+		homePlaceholder: '期限一覧のコンテンツを実装してください。',
 		settingsPlaceholder: '設定画面のコンテンツを実装してください。'
+	},
+	home: {
+		title: '保存した食品',
+		description: '登録済みの食品の期限と保管場所を確認できます。',
+		list: {
+			expirationTypes: {
+				bestBefore: '賞味期限',
+				useBy: '消費期限'
+			},
+			storageLabel: '保管場所',
+			notificationLabel: '通知',
+			categoriesLabel: 'カテゴリー',
+			storageFallback: '未入力',
+			notificationFallback: '未設定',
+			categoriesFallback: 'カテゴリーなし',
+			expirationFallback: '日付未設定',
+			expiredLabel: '期限切れ',
+			dueTodayLabel: '今日まで',
+			daysPrefix: 'あと',
+			daysSuffix: '日'
+		},
+		empty: {
+			title: 'まだ食品が登録されていません',
+			description: '「期限登録」タブから登録するとここに表示されます。'
+		},
+		errors: {
+			title: 'エラー',
+			loadFailed:
+				'保存済みの食品を読み込めませんでした。時間をおいて再度お試しください。'
+		},
+		actions: {
+			retry: '再読み込み'
+		}
 	},
 	register: {
 		title: '食品登録',
