@@ -8,6 +8,8 @@ import { formatDate, formatDateTime } from '@/src/utils/date-format'
 type Props = {
 	item: FoodListItem
 	onPress?: (item: FoodListItem) => void
+	onDelete?: (item: FoodListItem) => void
+	isDeleting?: boolean
 }
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000
@@ -60,7 +62,12 @@ const buildBadge = (expirationDate: Date | null) => {
 	}
 }
 
-export const FoodListCard = ({ item, onPress }: Props) => {
+export const FoodListCard = ({
+	item,
+	onPress,
+	onDelete,
+	isDeleting
+}: Props) => {
 	const badge = buildBadge(item.expirationDate)
 
 	// エラー対策: expirationTypeは 'bestBefore' | 'useBy' 型だが、念のためキー存在チェック
@@ -80,6 +87,10 @@ export const FoodListCard = ({ item, onPress }: Props) => {
 		onPress?.(item)
 	}
 
+	const handleDeletePress = () => {
+		onDelete?.(item)
+	}
+
 	return (
 		<Pressable
 			className='mb-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm'
@@ -87,17 +98,36 @@ export const FoodListCard = ({ item, onPress }: Props) => {
 			accessibilityRole='button'
 			accessibilityLabel={`${item.name}の詳細を開く`}
 		>
-			<View className='flex-row items-center justify-between'>
-				<Text className='text-lg font-semibold text-slate-900'>
+			<View className='flex-row items-center justify-between gap-2'>
+				<Text className='flex-1 text-lg font-semibold text-slate-900'>
 					{item.name}
 				</Text>
-				{badge ? (
-					<Text
-						className={`rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
-					>
-						{badge.label}
-					</Text>
-				) : null}
+				<View className='flex-row items-center gap-2'>
+					{badge ? (
+						<Text
+							className={`rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
+						>
+							{badge.label}
+						</Text>
+					) : null}
+					{onDelete ? (
+						<Pressable
+							className={`rounded-full border border-rose-200 bg-rose-50 px-3 py-1 ${
+								isDeleting ? 'opacity-60' : ''
+							}`}
+							disabled={isDeleting}
+							accessibilityRole='button'
+							accessibilityLabel={`${item.name}を削除する`}
+							onPress={handleDeletePress}
+						>
+							<Text className='text-xs font-semibold text-rose-700'>
+								{isDeleting
+									? UI_TEXT.home.actions.deleting
+									: UI_TEXT.home.actions.delete}
+							</Text>
+						</Pressable>
+					) : null}
+				</View>
 			</View>
 
 			<Text className='mt-2 text-sm text-slate-700'>

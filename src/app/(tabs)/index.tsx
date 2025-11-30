@@ -2,6 +2,7 @@ import { useFocusEffect } from 'expo-router'
 import { useCallback, useState } from 'react'
 import {
 	ActivityIndicator,
+	Alert,
 	FlatList,
 	Pressable,
 	RefreshControl,
@@ -11,6 +12,7 @@ import {
 
 import { FoodListCard } from '@/src/components/foods/FoodListCard'
 import { UI_TEXT } from '@/src/constants/ui-text'
+import { deleteFood } from '@/src/features/foods/delete-food'
 import {
 	getFoodList,
 	type FoodListItem
@@ -21,6 +23,7 @@ export default function Tab() {
 	const [isLoading, setIsLoading] = useState(true)
 	const [isRefreshing, setIsRefreshing] = useState(false)
 	const [error, setError] = useState<string | null>(null)
+	const [deletingIds, setDeletingIds] = useState<number[]>([])
 
 	const loadFoods = useCallback(
 		async (mode: 'initial' | 'refresh' = 'initial') => {
@@ -56,6 +59,49 @@ export default function Tab() {
 				console.error('食品一覧の取得に失敗しました', err)
 			})
 		}, [loadFoods])
+	)
+
+	const handleDelete = useCallback(async (id: number) => {
+		setDeletingIds((prev) => [...prev, id])
+
+		try {
+			const result = await deleteFood(id)
+			if (result.deleted) {
+				setFoods((prev) => prev.filter((food) => food.id !== id))
+			} else {
+				Alert.alert(UI_TEXT.home.errors.deleteFailed)
+			}
+		} catch (err) {
+			console.error('食品の削除に失敗しました', err)
+			Alert.alert(UI_TEXT.home.errors.deleteFailed)
+		} finally {
+			setDeletingIds((prev) => prev.filter((value) => value !== id))
+		}
+	}, [])
+
+	const confirmDelete = useCallback(
+		(item: FoodListItem) => {
+			Alert.alert(
+				UI_TEXT.home.actions.deleteConfirmTitle,
+				UI_TEXT.home.actions.deleteConfirmDescription.replace(
+					'{name}',
+					item.name
+				),
+				[
+					{ text: UI_TEXT.home.actions.deleteCancel, style: 'cancel' },
+					{
+						text: UI_TEXT.home.actions.delete,
+						style: 'destructive',
+						onPress: () => {
+							handleDelete(item.id).catch((error) => {
+								console.error('食品の削除に失敗しました', error)
+							})
+						}
+					}
+				]
+			)
+		},
+		[handleDelete]
 	)
 
 	const renderHeader = () => (
@@ -124,12 +170,14 @@ export default function Tab() {
 					<View className='px-4'>
 						<FoodListCard
 							item={item}
+							isDeleting={deletingIds.includes(item.id)}
 							onPress={(pressed) => {
 								console.log('食品カードがタップされました', {
 									id: pressed.id,
 									name: pressed.name
 								})
 							}}
+							onDelete={confirmDelete}
 						/>
 					</View>
 				)}

@@ -34,10 +34,18 @@ export const UI_TEXT = {
 		errors: {
 			title: 'エラー',
 			loadFailed:
-				'保存済みの食品を読み込めませんでした。時間をおいて再度お試しください。'
+				'保存済みの食品を読み込めませんでした。時間をおいて再度お試しください。',
+			deleteFailed:
+				'食品の削除に失敗しました。時間をおいてから再度お試しください。'
 		},
 		actions: {
-			retry: '再読み込み'
+			retry: '再読み込み',
+			delete: '削除',
+			deleting: '削除中…',
+			deleteCancel: 'キャンセル',
+			deleteConfirmTitle: '食品を削除しますか？',
+			deleteConfirmDescription:
+				'「{name}」を一覧から削除します。よろしいですか？'
 		}
 	},
 	register: {
