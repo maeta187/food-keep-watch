@@ -9,6 +9,7 @@ export const foods = sqliteTable('foods', {
 	storageLocation: text('storage_location'),
 	categories: text('categories').notNull().default('[]'),
 	notificationDateTime: text('notification_date_time'),
+	notificationId: text('notification_id'),
 	createdAt: integer('created_at')
 		.notNull()
 		.default(sql`(unixepoch())`),

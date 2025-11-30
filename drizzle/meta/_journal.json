@@ -15,6 +15,13 @@
 			"when": 1764029107843,
 			"tag": "0001_wandering_chamber",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1764466461829,
+			"tag": "0002_late_smasher",
+			"breakpoints": true
 		}
 	]
 }

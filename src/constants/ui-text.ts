@@ -93,5 +93,19 @@ export const UI_TEXT = {
 				'Web 版では日付ピッカーを利用できません。iOS 端末で設定してください。',
 			submitFailed: '登録に失敗しました。時間をおいてから再度お試しください。'
 		}
+	},
+	notifications: {
+		expirationReminderTitle: '「{name}」の期限が近づいています',
+		expirationReminderBody:
+			'{expirationType}が{expirationDate}です。食品を確認しましょう。',
+		permissionDeniedTitle: '通知を送信できません',
+		permissionDeniedDescription:
+			'通知の権限が許可されていないため、通知を予約できませんでした。端末の設定で通知を有効にしてください。',
+		invalidScheduleTitle: '通知時間が無効です',
+		invalidScheduleDescription:
+			'過去の時刻には通知を設定できません。通知時間を見直してください。',
+		scheduleFailedTitle: '通知の予約に失敗しました',
+		scheduleFailedDescription:
+			'食品は保存しましたが、通知の予約に失敗しました。時間をおいてから再度お試しください。'
 	}
 } as const

@@ -23,6 +23,10 @@ import {
 } from '@/src/constants/categories'
 import { UI_TEXT } from '@/src/constants/ui-text'
 import { useCategorySuggestions } from '@/src/features/categories/use-category-suggestions'
+import {
+	scheduleExpirationNotification,
+	type ScheduleExpirationNotificationResult
+} from '@/src/features/notifications/schedule-expiration-notification'
 import { createCategoryHandlers } from '@/src/features/register/category-handlers'
 import { saveFood } from '@/src/features/register/save-food'
 import { registerFormSchema } from '@/src/schemas/register-form'
@@ -92,23 +96,67 @@ export default function RegisterTab() {
 		setValue(key, value as any, { shouldDirty: true, shouldValidate: true })
 	}
 
+	const buildSubmitAlertContent = (
+		notificationResult: ScheduleExpirationNotificationResult
+	): { title: string; message: string } => {
+		switch (notificationResult.status) {
+			case 'permission-denied':
+				return {
+					title: UI_TEXT.notifications.permissionDeniedTitle,
+					message: UI_TEXT.notifications.permissionDeniedDescription
+				}
+			case 'failed':
+				return {
+					title: UI_TEXT.notifications.scheduleFailedTitle,
+					message: UI_TEXT.notifications.scheduleFailedDescription
+				}
+			default:
+				return {
+					title: UI_TEXT.register.messages.submitSuccessTitle,
+					message: UI_TEXT.register.messages.submitSuccessDescription
+				}
+		}
+	}
+
 	/**
 	 * react-hook-form 経由で送信された値を整形する。
 	 *
 	 * @param values バリデーション済みのフォーム値
 	 */
 	const handleValidSubmit = async (values: RegisterFormValues) => {
+		let notificationResult: ScheduleExpirationNotificationResult = {
+			status: 'skipped'
+		}
+
 		try {
-			await saveFood(values)
+			notificationResult = await scheduleExpirationNotification({
+				foodName: values.name.trim(),
+				expirationDateIso: values.expirationDate,
+				expirationType: values.expirationType,
+				notificationDateTimeIso: values.notificationDateTime
+			})
+
+			if (notificationResult.status === 'invalid-trigger') {
+				Alert.alert(
+					UI_TEXT.notifications.invalidScheduleTitle,
+					UI_TEXT.notifications.invalidScheduleDescription
+				)
+				return
+			}
+
+			await saveFood(values, {
+				notificationId:
+					notificationResult.status === 'scheduled'
+						? notificationResult.notificationId
+						: null
+			})
 			reset(defaultRegisterValues)
 			setCategoryInput('')
 			setCategoryError(null)
 			setPendingExpirationDate(new Date())
 			setPendingNotificationDate(new Date())
-			Alert.alert(
-				UI_TEXT.register.messages.submitSuccessTitle,
-				UI_TEXT.register.messages.submitSuccessDescription
-			)
+			const alertContent = buildSubmitAlertContent(notificationResult)
+			Alert.alert(alertContent.title, alertContent.message)
 		} catch (error) {
 			console.error('食品登録に失敗しました', error)
 			Alert.alert(UI_TEXT.register.errors.submitFailed)

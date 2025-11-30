@@ -27,6 +27,20 @@ await db.insert(foods).values({ name: '牛乳', ... })
 
 > 備考: `bun run db:generate` は SQL で生成されたファイルを自動で `.ts` に包み直すスクリプト（`scripts/prepare-migrations.ts`）を実行します。Expo/React Native で扱いやすいよう文字列エクスポートに変換しているだけなので、生成後のファイルをそのままコミットしてください。
 
+### マイグレーション（SQL）の作成方法
+
+- Drizzle は `.sql` を出力しますが、リポジトリでは **`.ts` ファイルのみを採用** します。生成された `.sql` はコミットせず削除してください。
+- 各マイグレーションファイルは `drizzle/000x_*.ts` に `const migration = \`...\``形式で SQL を文字列化して`export default migration`します。SQL 内のバッククォートは`\`` でエスケープしてください。
+- 例: `drizzle/0001_wandering_chamber.ts`
+  ```ts
+  const migration = `
+  CREATE TABLE \\`categories\\` (...);
+  --> statement-breakpoint
+  CREATE UNIQUE INDEX ...;
+  `
+  export default migration
+  ```
+
 ## シードデータ投入
 
 - サンプル定義: `src/database/sample-data.ts`

@@ -39,7 +39,8 @@
 					"root": "src/app"
 				}
 			],
-			"expo-dev-client"
+			"expo-dev-client",
+			"expo-notifications"
 		]
 	}
 }
