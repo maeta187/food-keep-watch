@@ -103,6 +103,13 @@ export const FoodListCard = ({
 					{item.name}
 				</Text>
 				<View className='flex-row items-center gap-2'>
+					{badge ? (
+						<Text
+							className={`rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
+						>
+							{badge.label}
+						</Text>
+					) : null}
 					{onDelete ? (
 						<Pressable
 							className={`rounded-full border border-rose-200 bg-rose-50 px-3 py-1 ${
@@ -119,13 +126,6 @@ export const FoodListCard = ({
 									: UI_TEXT.home.actions.delete}
 							</Text>
 						</Pressable>
-					) : null}
-					{badge ? (
-						<Text
-							className={`rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
-						>
-							{badge.label}
-						</Text>
 					) : null}
 				</View>
 			</View>
