@@ -10,14 +10,16 @@ const normalizeOptionalText = (value?: string | null): string | null => {
 }
 
 const buildInsertPayload = (
-	values: RegisterFormValues
+	values: RegisterFormValues,
+	notificationId?: string | null
 ): Omit<NewFood, 'id'> => ({
 	name: values.name.trim(),
 	expirationType: values.expirationType,
 	expirationDate: values.expirationDate,
 	storageLocation: normalizeOptionalText(values.storageLocation),
 	categories: JSON.stringify(values.categories),
-	notificationDateTime: normalizeOptionalText(values.notificationDateTime)
+	notificationDateTime: normalizeOptionalText(values.notificationDateTime),
+	notificationId: normalizeOptionalText(notificationId)
 })
 
 /**
@@ -26,10 +28,11 @@ const buildInsertPayload = (
  * @param values 登録フォームの入力値
  */
 export const saveFood = async (
-	values: RegisterFormValues
+	values: RegisterFormValues,
+	options?: { notificationId?: string | null }
 ): Promise<SQLiteRunResult> => {
 	const db = await getDb()
-	const payload = buildInsertPayload(values)
+	const payload = buildInsertPayload(values, options?.notificationId)
 
 	const result = await db.insert(foods).values(payload)
 
