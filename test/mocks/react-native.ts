@@ -15,12 +15,16 @@ export const Pressable = ({
 	children,
 	onPress,
 	accessibilityRole,
+	accessibilityLabel,
 	accessibilityState,
+	disabled,
 	...rest
 }: ChildrenProps & {
 	onPress?: () => void
 	accessibilityRole?: string
+	accessibilityLabel?: string
 	accessibilityState?: { selected?: boolean }
+	disabled?: boolean
 }) =>
 	React.createElement(
 		'button',
@@ -28,10 +32,12 @@ export const Pressable = ({
 			type: 'button',
 			onClick: onPress,
 			role: accessibilityRole ?? 'button',
+			'aria-label': accessibilityLabel,
 			'aria-checked':
 				accessibilityRole === 'radio' || accessibilityRole === 'checkbox'
 					? String(Boolean(accessibilityState?.selected))
 					: undefined,
+			disabled,
 			...rest
 		},
 		children

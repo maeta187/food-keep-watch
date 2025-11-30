@@ -58,4 +58,29 @@ describe('FoodListCard', () => {
 		expect(handlePress).toHaveBeenCalledTimes(1)
 		expect(handlePress).toHaveBeenCalledWith(baseItem)
 	})
+
+	it('削除ボタンを押下すると onDelete ハンドラーが呼ばれる', () => {
+		const handleDelete = vi.fn()
+		const mutableItem = { ...baseItem, categories: [...baseItem.categories] }
+		const { getByLabelText } = render(
+			<FoodListCard item={mutableItem} onDelete={handleDelete} />
+		)
+
+		fireEvent.click(getByLabelText(`${baseItem.name}を削除する`))
+
+		expect(handleDelete).toHaveBeenCalledTimes(1)
+		expect(handleDelete).toHaveBeenCalledWith(baseItem)
+	})
+
+	it('削除中はボタンを無効化して文言を切り替える', () => {
+		const mutableItem = { ...baseItem, categories: [...baseItem.categories] }
+		const { getByLabelText, getByText } = render(
+			<FoodListCard item={mutableItem} onDelete={vi.fn()} isDeleting />
+		)
+
+		const deleteButton = getByLabelText(`${baseItem.name}を削除する`)
+		expect(deleteButton).toBeInstanceOf(HTMLButtonElement)
+		expect((deleteButton as HTMLButtonElement).disabled).toBe(true)
+		expect(getByText(UI_TEXT.home.actions.deleting)).toBeTruthy()
+	})
 })

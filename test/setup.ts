@@ -1,5 +1,24 @@
-import { afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, vi } from 'vitest'
+
+// React NativeのPressableがテスト環境で<button>に変換される際の警告を抑制
+// 実際のReact NativeアプリではPressableはネイティブコンポーネントに変換されるため問題なし
+const originalError = console.error
+beforeEach(() => {
+	console.error = (...args: unknown[]) => {
+		const message = typeof args[0] === 'string' ? args[0] : String(args[0])
+		// <button>のネスト警告のみを抑制
+		if (
+			message.includes('<button> cannot be a descendant of <button>') ||
+			message.includes('cannot contain a nested <button>')
+		) {
+			return
+		}
+		originalError.call(console, ...args)
+	}
+})
+
 afterEach(() => {
+	console.error = originalError
 	vi.restoreAllMocks()
 })
 
