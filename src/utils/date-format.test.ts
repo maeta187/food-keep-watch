@@ -52,6 +52,51 @@ describe('date-format utilities', () => {
 		expect(formatDateTime(null)).toBeUndefined()
 	})
 
+	it('returns undefined when date input is invalid', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+
+		expect(formatDate('invalid date string')).toBeUndefined()
+		expect(formatDateTime('invalid date string')).toBeUndefined()
+		expect(dateFormatterMock).not.toHaveBeenCalled()
+		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
+	})
+
+	it('returns undefined when Date instance is invalid', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+		const invalidDate = new Date('invalid')
+
+		expect(formatDate(invalidDate)).toBeUndefined()
+		expect(formatDateTime(invalidDate)).toBeUndefined()
+		expect(dateFormatterMock).not.toHaveBeenCalled()
+		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
+	})
+
+	it('returns undefined when date input is empty string or whitespace', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+
+		expect(formatDate('')).toBeUndefined()
+		expect(formatDate('   ')).toBeUndefined()
+		expect(formatDateTime('')).toBeUndefined()
+		expect(formatDateTime('   ')).toBeUndefined()
+		expect(dateFormatterMock).not.toHaveBeenCalled()
+		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
+	})
+
 	it('returns the value provided by Intl formatters', async () => {
 		const {
 			formatDate,
@@ -65,5 +110,22 @@ describe('date-format utilities', () => {
 		expect(formatDateTime(targetDate)).toBe('formatted-datetime')
 		expect(dateFormatterMock).toHaveBeenCalledWith(targetDate)
 		expect(dateTimeFormatterMock).toHaveBeenCalledWith(targetDate)
+	})
+
+	it('normalizes string and timestamp inputs before formatting', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+
+		const isoString = '2024-01-15T00:00:00Z'
+		const timestamp = 1705276800000
+
+		expect(formatDate(isoString)).toBe('formatted-date')
+		expect(dateFormatterMock).toHaveBeenCalledWith(new Date(isoString))
+		expect(formatDateTime(timestamp)).toBe('formatted-datetime')
+		expect(dateTimeFormatterMock).toHaveBeenCalledWith(new Date(timestamp))
 	})
 })

@@ -1,4 +1,4 @@
-import { asc } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 import { getDb } from '@/src/database/client'
 import { foods, type Food } from '@/src/database/schema'
@@ -9,11 +9,11 @@ import {
 	type ParsedDate
 } from '@/src/features/foods/utils'
 
-export type FoodListItem = {
+export type FoodDetail = {
 	id: number
 	name: string
 	expirationType: Food['expirationType']
-	expirationDate: ParsedDate
+	expirationDate: Date
 	storageLocation: string | null
 	categories: string[]
 	notificationDateTime: ParsedDate
@@ -22,24 +22,31 @@ export type FoodListItem = {
 }
 
 /**
- * foods テーブルに保存されたレコードを期限日の昇順で取得する。
+ * foods テーブルから指定 ID のレコードを取得する。
+ * 期限日が欠損または不正な場合は null を返す。
  */
-export const getFoodList = async (): Promise<FoodListItem[]> => {
+export const getFoodDetail = async (id: number): Promise<FoodDetail | null> => {
 	const db = await getDb()
-	const rows = await db
-		.select()
-		.from(foods)
-		.orderBy(asc(foods.expirationDate), asc(foods.id))
+	const [row] = await db.select().from(foods).where(eq(foods.id, id))
 
-	return rows.map((row) => ({
+	if (!row) {
+		return null
+	}
+
+	const expirationDate = parseDate(row.expirationDate)
+	if (!expirationDate) {
+		return null
+	}
+
+	return {
 		id: row.id,
 		name: row.name,
 		expirationType: row.expirationType,
-		expirationDate: parseDate(row.expirationDate),
+		expirationDate,
 		storageLocation: row.storageLocation ?? null,
 		categories: parseCategories(row.categories),
 		notificationDateTime: parseDate(row.notificationDateTime),
 		createdAt: parseEpochSeconds(row.createdAt),
 		updatedAt: parseEpochSeconds(row.updatedAt)
-	}))
+	}
 }

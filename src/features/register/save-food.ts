@@ -2,12 +2,11 @@ import type { SQLiteRunResult } from 'expo-sqlite'
 
 import { getDb } from '@/src/database/client'
 import { foods, type NewFood } from '@/src/database/schema'
+import {
+	buildCategoriesPayload,
+	normalizeOptionalText
+} from '@/src/features/foods/utils'
 import { type RegisterFormValues } from '@/src/types'
-
-const normalizeOptionalText = (value?: string | null): string | null => {
-	const trimmed = value?.trim() ?? ''
-	return trimmed.length > 0 ? trimmed : null
-}
 
 const buildInsertPayload = (
 	values: RegisterFormValues,
@@ -17,7 +16,7 @@ const buildInsertPayload = (
 	expirationType: values.expirationType,
 	expirationDate: values.expirationDate,
 	storageLocation: normalizeOptionalText(values.storageLocation),
-	categories: JSON.stringify(values.categories),
+	categories: buildCategoriesPayload(values.categories),
 	notificationDateTime: normalizeOptionalText(values.notificationDateTime),
 	notificationId: normalizeOptionalText(notificationId)
 })

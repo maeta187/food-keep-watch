@@ -48,6 +48,29 @@ export const UI_TEXT = {
 				'「{name}」を一覧から削除します。よろしいですか？'
 		}
 	},
+	detail: {
+		title: '食品の詳細',
+		description: '登録内容を確認・更新できます。',
+		errors: {
+			notFound: '指定した食品が見つかりませんでした。',
+			loadFailed:
+				'食品情報の読み込みに失敗しました。時間をおいて再度お試しください。',
+			updateFailed: '更新に失敗しました。時間をおいてから再度お試しください。',
+			deleteFailed: '削除に失敗しました。時間をおいてから再度お試しください。'
+		},
+		actions: {
+			backToList: '一覧へ戻る',
+			cancel: 'キャンセル',
+			update: '更新する',
+			delete: '削除する',
+			deleteConfirmTitle: '食品を削除しますか？',
+			deleteConfirmDescription: '「{name}」を削除します。よろしいですか？'
+		},
+		messages: {
+			updateSuccessTitle: '更新が完了しました',
+			updateSuccessDescription: '食品の情報を更新しました。'
+		}
+	},
 	register: {
 		title: '食品登録',
 		sectionHeading: '賞味期限管理',

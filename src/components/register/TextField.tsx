@@ -34,7 +34,7 @@ export function TextField({
 		<>
 			<Text className='mb-3 text-sm font-semibold text-slate-700'>{label}</Text>
 			<TextInput
-				className={`h-12 w-full rounded-2xl border ${borderClass} px-4 text-base ${textColor}`}
+				className={`h-12 w-full rounded-2xl border ${borderClass} px-4 py-0 ${textColor}`}
 				placeholder={placeholder}
 				placeholderTextColor={placeholderColor}
 				value={value}
@@ -42,8 +42,8 @@ export function TextField({
 				onBlur={onBlur}
 				cursorColor='#2563eb'
 				returnKeyType='done'
-				textAlignVertical='top'
-				style={{ paddingTop: 0, paddingBottom: 0 }}
+				textAlignVertical='center'
+				style={{ fontSize: 14 }}
 			/>
 			{error ? <Text className='text-xs text-red-500'>{error}</Text> : null}
 		</>
