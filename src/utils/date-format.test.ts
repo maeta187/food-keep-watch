@@ -66,6 +66,21 @@ describe('date-format utilities', () => {
 		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
 	})
 
+	it('returns undefined when Date instance is invalid', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+		const invalidDate = new Date('invalid')
+
+		expect(formatDate(invalidDate)).toBeUndefined()
+		expect(formatDateTime(invalidDate)).toBeUndefined()
+		expect(dateFormatterMock).not.toHaveBeenCalled()
+		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
+	})
+
 	it('returns undefined when date input is empty string or whitespace', async () => {
 		const {
 			formatDate,
