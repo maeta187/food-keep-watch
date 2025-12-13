@@ -66,6 +66,22 @@ describe('date-format utilities', () => {
 		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
 	})
 
+	it('returns undefined when date input is empty string or whitespace', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+
+		expect(formatDate('')).toBeUndefined()
+		expect(formatDate('   ')).toBeUndefined()
+		expect(formatDateTime('')).toBeUndefined()
+		expect(formatDateTime('   ')).toBeUndefined()
+		expect(dateFormatterMock).not.toHaveBeenCalled()
+		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
+	})
+
 	it('returns the value provided by Intl formatters', async () => {
 		const {
 			formatDate,

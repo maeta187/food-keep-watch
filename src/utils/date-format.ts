@@ -12,8 +12,19 @@ const DATETIME_FORMATTER = new Intl.DateTimeFormat('ja-JP', {
 const normalizeDateInput = (value?: DateInput): Date | undefined => {
 	if (value === null || value === undefined) return undefined
 
-	const normalized =
-		value instanceof Date ? new Date(value.getTime()) : new Date(value)
+	let normalized: Date
+
+	if (value instanceof Date) {
+		normalized = new Date(value.getTime())
+	} else if (typeof value === 'string') {
+		const trimmed = value.trim()
+		if (!trimmed) return undefined
+
+		normalized = new Date(trimmed)
+	} else {
+		normalized = new Date(value)
+	}
+
 	if (Number.isNaN(normalized.getTime())) return undefined
 
 	return normalized
