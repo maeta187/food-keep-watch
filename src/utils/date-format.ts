@@ -14,7 +14,11 @@ const DATETIME_FORMATTER = new Intl.DateTimeFormat('ja-JP', {
  */
 export const formatDate = (date?: Date | null): string | undefined => {
 	if (!date) return undefined
-	return DATE_FORMATTER.format(date)
+
+	const normalizedDate = new Date(date)
+	if (Number.isNaN(normalizedDate.getTime())) return undefined
+
+	return DATE_FORMATTER.format(normalizedDate)
 }
 
 /**
@@ -24,5 +28,9 @@ export const formatDate = (date?: Date | null): string | undefined => {
  */
 export const formatDateTime = (dateTime?: Date | null): string | undefined => {
 	if (!dateTime) return undefined
-	return DATETIME_FORMATTER.format(dateTime)
+
+	const normalizedDateTime = new Date(dateTime)
+	if (Number.isNaN(normalizedDateTime.getTime())) return undefined
+
+	return DATETIME_FORMATTER.format(normalizedDateTime)
 }

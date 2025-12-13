@@ -52,6 +52,22 @@ describe('date-format utilities', () => {
 		expect(formatDateTime(null)).toBeUndefined()
 	})
 
+	it('returns undefined when date input is invalid', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+
+		const invalidDate = new Date('invalid date string')
+
+		expect(formatDate(invalidDate)).toBeUndefined()
+		expect(formatDateTime(invalidDate)).toBeUndefined()
+		expect(dateFormatterMock).not.toHaveBeenCalled()
+		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
+	})
+
 	it('returns the value provided by Intl formatters', async () => {
 		const {
 			formatDate,
