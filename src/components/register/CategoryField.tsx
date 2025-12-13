@@ -57,7 +57,7 @@ export function CategoryField({
 					</View>
 				) : null}
 				<TextInput
-					className='h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-base text-slate-900'
+					className='h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-0 text-slate-900'
 					placeholder={UI_TEXT.register.fields.category.placeholder}
 					placeholderTextColor={placeholderColor}
 					value={inputValue}
@@ -66,11 +66,8 @@ export function CategoryField({
 					onBlur={onAdd}
 					cursorColor='#2563eb'
 					returnKeyType='done'
-					textAlignVertical='top'
-					style={{
-						paddingTop: 0,
-						paddingBottom: 0
-					}}
+					textAlignVertical='center'
+					style={{ fontSize: 14 }}
 				/>
 				{errorMessage ? (
 					<Text className='mt-2 text-xs text-red-500'>{errorMessage}</Text>

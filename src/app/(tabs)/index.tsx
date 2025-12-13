@@ -1,4 +1,4 @@
-import { useFocusEffect } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
 import {
 	ActivityIndicator,
@@ -19,6 +19,7 @@ import {
 } from '@/src/features/foods/get-food-list'
 
 export default function Tab() {
+	const router = useRouter()
 	const [foods, setFoods] = useState<FoodListItem[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [isRefreshing, setIsRefreshing] = useState(false)
@@ -172,9 +173,9 @@ export default function Tab() {
 							item={item}
 							isDeleting={deletingIds.includes(item.id)}
 							onPress={(pressed) => {
-								console.log('食品カードがタップされました', {
-									id: pressed.id,
-									name: pressed.name
+								router.push({
+									pathname: '/foods/[id]',
+									params: { id: pressed.id.toString() }
 								})
 							}}
 							onDelete={confirmDelete}
