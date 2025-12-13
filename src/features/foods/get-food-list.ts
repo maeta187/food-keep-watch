@@ -2,8 +2,12 @@ import { asc } from 'drizzle-orm'
 
 import { getDb } from '@/src/database/client'
 import { foods, type Food } from '@/src/database/schema'
-
-type ParsedDate = Date | null
+import {
+	parseCategories,
+	parseDate,
+	parseEpochSeconds,
+	type ParsedDate
+} from '@/src/features/foods/utils'
 
 export type FoodListItem = {
 	id: number
@@ -15,36 +19,6 @@ export type FoodListItem = {
 	notificationDateTime: ParsedDate
 	createdAt: ParsedDate
 	updatedAt: ParsedDate
-}
-
-const parseDate = (value?: string | null): ParsedDate => {
-	if (!value) {
-		return null
-	}
-	const parsed = new Date(value)
-	return Number.isNaN(parsed.getTime()) ? null : parsed
-}
-
-const parseEpochSeconds = (value?: number | null): ParsedDate => {
-	if (value == null) {
-		return null
-	}
-	const parsed = new Date(value * 1000)
-	return Number.isNaN(parsed.getTime()) ? null : parsed
-}
-
-const parseCategories = (value?: string | null): string[] => {
-	if (!value) {
-		return []
-	}
-	try {
-		const parsed = JSON.parse(value)
-		return Array.isArray(parsed)
-			? parsed.filter((item) => typeof item === 'string')
-			: []
-	} catch {
-		return []
-	}
 }
 
 /**
