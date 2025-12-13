@@ -60,10 +60,8 @@ describe('date-format utilities', () => {
 			dateTimeFormatterMock
 		} = await importModuleWithIntlMocks()
 
-		const invalidDate = new Date('invalid date string')
-
-		expect(formatDate(invalidDate)).toBeUndefined()
-		expect(formatDateTime(invalidDate)).toBeUndefined()
+		expect(formatDate('invalid date string')).toBeUndefined()
+		expect(formatDateTime('invalid date string')).toBeUndefined()
 		expect(dateFormatterMock).not.toHaveBeenCalled()
 		expect(dateTimeFormatterMock).not.toHaveBeenCalled()
 	})
@@ -81,5 +79,22 @@ describe('date-format utilities', () => {
 		expect(formatDateTime(targetDate)).toBe('formatted-datetime')
 		expect(dateFormatterMock).toHaveBeenCalledWith(targetDate)
 		expect(dateTimeFormatterMock).toHaveBeenCalledWith(targetDate)
+	})
+
+	it('normalizes string and timestamp inputs before formatting', async () => {
+		const {
+			formatDate,
+			formatDateTime,
+			dateFormatterMock,
+			dateTimeFormatterMock
+		} = await importModuleWithIntlMocks()
+
+		const isoString = '2024-01-15T00:00:00Z'
+		const timestamp = 1705276800000
+
+		expect(formatDate(isoString)).toBe('formatted-date')
+		expect(dateFormatterMock).toHaveBeenCalledWith(new Date(isoString))
+		expect(formatDateTime(timestamp)).toBe('formatted-datetime')
+		expect(dateTimeFormatterMock).toHaveBeenCalledWith(new Date(timestamp))
 	})
 })
