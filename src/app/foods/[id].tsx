@@ -22,22 +22,19 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { RegisterFormValues } from 'types'
 
-import { CategoryField } from '@/src/components/register/CategoryField'
+import { CategorySelectField } from '@/src/components/register/CategorySelectField'
 import { DateTimePickerSheet } from '@/src/components/register/DateTimePickerSheet'
 import { ExpirationTypeField } from '@/src/components/register/ExpirationTypeField'
 import { PickerField } from '@/src/components/register/PickerField'
 import { TextField } from '@/src/components/register/TextField'
-import {
-	MAX_CATEGORIES,
-	MAX_SAVED_CATEGORIES
-} from '@/src/constants/categories'
+import { MAX_CATEGORIES } from '@/src/constants/categories'
 import { UI_TEXT } from '@/src/constants/ui-text'
 import { useCategorySuggestions } from '@/src/features/categories/use-category-suggestions'
 import { deleteFood } from '@/src/features/foods/delete-food'
 import { getFoodDetail } from '@/src/features/foods/get-food-detail'
 import { updateFood } from '@/src/features/foods/update-food'
 import { type ScheduleExpirationNotificationResult } from '@/src/features/notifications/schedule-expiration-notification'
-import { createCategoryHandlers } from '@/src/features/register/category-handlers'
+import { createCategorySelectionHandlers } from '@/src/features/register/category-handlers'
 import { registerFormSchema } from '@/src/schemas/register-form'
 import { formatDate, formatDateTime } from '@/src/utils/date-format'
 
@@ -107,7 +104,6 @@ export default function FoodDetailScreen() {
 	const [error, setError] = useState<string | null>(null)
 	const [foodName, setFoodName] = useState('')
 	const [isDeleting, setIsDeleting] = useState(false)
-	const [categoryInput, setCategoryInput] = useState('')
 	const [categoryError, setCategoryError] = useState<string | null>(null)
 	const [isExpirationPickerVisible, setExpirationPickerVisible] =
 		useState(false)
@@ -142,7 +138,7 @@ export default function FoodDetailScreen() {
 	const formattedNotificationDateTime = formatDateTime(
 		notificationDateTimeIso ? new Date(notificationDateTimeIso) : undefined
 	)
-	const { suggestions: categorySuggestions, persistCategory } =
+	const { suggestions: categorySuggestions, isLoading: isCategoryLoading } =
 		useCategorySuggestions()
 
 	const goBackToList = useCallback(() => {
@@ -173,7 +169,6 @@ export default function FoodDetailScreen() {
 			const nextValues = buildFormValues(detail)
 			reset(nextValues)
 			setFoodName(detail.name)
-			setCategoryInput('')
 			setCategoryError(null)
 			setPendingExpirationDate(detail.expirationDate)
 			setPendingNotificationDate(
@@ -242,29 +237,15 @@ export default function FoodDetailScreen() {
 		setNotificationPickerVisible(false)
 	}
 
-	const { addCategory, removeCategory, selectCategorySuggestion } =
-		createCategoryHandlers({
-			categories,
-			categoryInput,
-			maxCategories: MAX_CATEGORIES,
-			limitErrorMessage: UI_TEXT.register.errors.categoryLimit,
-			storageLimitErrorMessage: UI_TEXT.register.errors.categoryStorageLimit,
-			setCategoryInput,
-			setCategoryError,
-			updateCategories: (nextCategories) => {
-				updateField('categories', nextCategories)
-			},
-			validateBeforeAdd: (candidate) => {
-				if (
-					!categorySuggestions.includes(candidate) &&
-					categorySuggestions.length >= MAX_SAVED_CATEGORIES
-				) {
-					return UI_TEXT.register.errors.categoryStorageLimit
-				}
-				return null
-			},
-			onNewCategoryAdded: persistCategory
-		})
+	const { toggleCategory } = createCategorySelectionHandlers({
+		categories,
+		maxCategories: MAX_CATEGORIES,
+		limitErrorMessage: UI_TEXT.register.errors.categoryLimit,
+		setCategoryError,
+		updateCategories: (nextCategories) => {
+			updateField('categories', nextCategories)
+		}
+	})
 
 	const handleUpdate = useCallback(
 		async (values: RegisterFormValues) => {
@@ -546,15 +527,12 @@ export default function FoodDetailScreen() {
 							</View>
 
 							<View className='pt-4'>
-								<CategoryField
+								<CategorySelectField
 									values={categories}
-									inputValue={categoryInput}
-									onInputChange={setCategoryInput}
-									onAdd={addCategory}
-									onRemove={removeCategory}
-									onSelectSuggestion={selectCategorySuggestion}
 									suggestions={categorySuggestions}
+									onToggle={toggleCategory}
 									errorMessage={categoryError ?? undefined}
+									isLoading={isCategoryLoading}
 								/>
 							</View>
 

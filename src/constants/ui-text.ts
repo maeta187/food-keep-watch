@@ -99,7 +99,12 @@ export const UI_TEXT = {
 				placeholder: 'カテゴリーを入力して Enter で追加',
 				helper:
 					'カテゴリーは複数追加できます。不要になったタグはタップで削除します。',
-				suggestionsLabel: 'カテゴリー候補'
+				suggestionsLabel: 'カテゴリー候補',
+				selectionHelper:
+					'登録済みのカテゴリーをタップして紐づけ/解除できます（最大5件）。',
+				emptySelection:
+					'まだカテゴリーが選択されていません。紐づけたいカテゴリーを選んでください。',
+				loading: 'カテゴリーを読み込んでいます'
 			},
 			notificationTime: {
 				label: '通知時間',

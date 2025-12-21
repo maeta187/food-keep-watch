@@ -111,3 +111,38 @@ export const createCategoryHandlers = ({
 
 	return { addCategory, removeCategory, selectCategorySuggestion }
 }
+
+type CategorySelectionHandlersParams = {
+	categories: string[]
+	maxCategories: number
+	limitErrorMessage: string
+	setCategoryError: (value: string | null) => void
+	updateCategories: (next: string[]) => void
+}
+
+/**
+ * 既存カテゴリーの選択・解除のみを制御するハンドラを生成する。
+ */
+export const createCategorySelectionHandlers = ({
+	categories,
+	maxCategories,
+	limitErrorMessage,
+	setCategoryError,
+	updateCategories
+}: CategorySelectionHandlersParams) => {
+	const toggleCategory = (category: string) => {
+		if (categories.includes(category)) {
+			updateCategories(categories.filter((item) => item !== category))
+			setCategoryError(null)
+			return
+		}
+		if (categories.length >= maxCategories) {
+			setCategoryError(limitErrorMessage)
+			return
+		}
+		updateCategories([...categories, category])
+		setCategoryError(null)
+	}
+
+	return { toggleCategory }
+}
