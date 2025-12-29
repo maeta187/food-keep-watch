@@ -47,6 +47,20 @@ export const getAllCategoryNames = async (): Promise<string[]> => {
 }
 
 /**
+ * カテゴリーテーブルに1件以上存在するか判定する。
+ *
+ * @returns カテゴリーが存在する場合 true
+ */
+export const hasAnyCategories = async (): Promise<boolean> => {
+	const db = await getDb()
+	const [{ count }] = (await db
+		.select({ count: sql<number>`count(*)` })
+		.from(categories)) ?? [{ count: 0 }]
+
+	return count > 0
+}
+
+/**
  * 渡されたカテゴリー名のうち、未登録のものだけを追加する。
  *
  * @param names 追加対象のカテゴリー名配列

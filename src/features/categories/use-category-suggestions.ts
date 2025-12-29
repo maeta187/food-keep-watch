@@ -5,6 +5,7 @@ import { SUGGESTED_CATEGORIES } from '@/src/constants/categories'
 import { getCategorySeededFlag } from '@/src/database/app-settings'
 import {
 	getAllCategoryNames,
+	hasAnyCategories,
 	insertCategoriesIfMissing
 } from '@/src/database/categories'
 
@@ -20,8 +21,11 @@ export const useCategorySuggestions = () => {
 		try {
 			const names = await getAllCategoryNames()
 			if (names.length === 0) {
-				const hasSeeded = await getCategorySeededFlag()
-				if (!hasSeeded) {
+				const [hasSeeded, hasCategories] = await Promise.all([
+					getCategorySeededFlag(),
+					hasAnyCategories()
+				])
+				if (!hasSeeded && !hasCategories) {
 					await insertCategoriesIfMissing(SUGGESTED_CATEGORIES)
 					setSuggestions(SUGGESTED_CATEGORIES)
 					return
