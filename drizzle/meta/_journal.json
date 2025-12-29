@@ -22,6 +22,13 @@
 			"when": 1764466461829,
 			"tag": "0002_late_smasher",
 			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "6",
+			"when": 1765852439000,
+			"tag": "0003_brisk_wave",
+			"breakpoints": true
 		}
 	]
 }

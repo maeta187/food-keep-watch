@@ -35,3 +35,17 @@ export const categories = sqliteTable('categories', {
 
 export type Category = typeof categories.$inferSelect
 export type NewCategory = typeof categories.$inferInsert
+
+export const appSettings = sqliteTable('app_settings', {
+	key: text('key').primaryKey(),
+	value: text('value').notNull(),
+	createdAt: integer('created_at')
+		.notNull()
+		.default(sql`(unixepoch())`),
+	updatedAt: integer('updated_at')
+		.notNull()
+		.default(sql`(unixepoch())`)
+})
+
+export type AppSetting = typeof appSettings.$inferSelect
+export type NewAppSetting = typeof appSettings.$inferInsert
