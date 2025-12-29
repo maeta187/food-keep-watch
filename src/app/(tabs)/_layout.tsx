@@ -28,6 +28,7 @@ export default function TabLayout() {
 				name='settings'
 				options={{
 					title: UI_TEXT.tabs.settingsTitle,
+					headerShown: false,
 					tabBarIcon: ({ color }) => (
 						<FontAwesome size={28} name='cog' color={color} />
 					)
