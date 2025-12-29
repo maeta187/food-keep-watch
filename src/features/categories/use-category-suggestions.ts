@@ -2,7 +2,10 @@ import { useFocusEffect } from 'expo-router'
 import { useCallback, useState } from 'react'
 
 import { SUGGESTED_CATEGORIES } from '@/src/constants/categories'
-import { getCategorySeededFlag } from '@/src/database/app-settings'
+import {
+	getCategoryInitializedFlag,
+	getCategorySeededFlag
+} from '@/src/database/app-settings'
 import {
 	getAllCategoryNames,
 	hasAnyCategories,
@@ -21,11 +24,12 @@ export const useCategorySuggestions = () => {
 		try {
 			const names = await getAllCategoryNames()
 			if (names.length === 0) {
-				const [hasSeeded, hasCategories] = await Promise.all([
+				const [hasSeeded, hasInitialized, hasCategories] = await Promise.all([
 					getCategorySeededFlag(),
+					getCategoryInitializedFlag(),
 					hasAnyCategories()
 				])
-				if (!hasSeeded && !hasCategories) {
+				if (!hasSeeded && !hasInitialized && !hasCategories) {
 					await insertCategoriesIfMissing(SUGGESTED_CATEGORIES)
 					setSuggestions(SUGGESTED_CATEGORIES)
 					return

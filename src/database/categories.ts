@@ -1,7 +1,10 @@
 import { asc, eq, inArray, sql } from 'drizzle-orm'
 
 import { MAX_SAVED_CATEGORIES } from '@/src/constants/categories'
-import { setCategorySeededFlag } from '@/src/database/app-settings'
+import {
+	setCategoryInitializedFlag,
+	setCategorySeededFlag
+} from '@/src/database/app-settings'
 import { getDb, type Database } from '@/src/database/client'
 import { categories, foods } from '@/src/database/schema'
 import { parseCategories } from '@/src/features/foods/utils'
@@ -110,7 +113,7 @@ export const insertCategoriesIfMissing = async (
 		.values(limitedInsert.map((name) => ({ name, visible: true })))
 		.onConflictDoNothing()
 
-	await setCategorySeededFlag()
+	await Promise.all([setCategorySeededFlag(), setCategoryInitializedFlag()])
 
 	return limitedInsert
 }
@@ -133,6 +136,10 @@ export const getManageableCategories = async (): Promise<
 			.orderBy(asc(categories.name)),
 		buildCategoryUsageMap(db)
 	])
+
+	if (categoryRows.length > 0) {
+		await setCategoryInitializedFlag()
+	}
 
 	return categoryRows.map((row) => ({
 		...row,
