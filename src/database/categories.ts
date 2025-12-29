@@ -155,6 +155,7 @@ export const updateCategoryVisibility = async (
 	visible: boolean
 ): Promise<void> => {
 	const db = await getDb()
+	await setCategoryInitializedFlag()
 	await db
 		.update(categories)
 		.set({ visible, updatedAt: sql`(unixepoch())` })
@@ -188,6 +189,7 @@ export const deleteCategoryIfUnused = async (
 		return { deleted: false, reason: 'in-use', usageCount }
 	}
 
+	await setCategoryInitializedFlag()
 	await db.delete(categories).where(eq(categories.id, id))
 
 	return { deleted: true }
