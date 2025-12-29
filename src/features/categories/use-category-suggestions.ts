@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useFocusEffect } from 'expo-router'
+import { useCallback, useState } from 'react'
 
 import { SUGGESTED_CATEGORIES } from '@/src/constants/categories'
 import {
@@ -30,11 +31,13 @@ export const useCategorySuggestions = () => {
 		}
 	}, [])
 
-	useEffect(() => {
-		load().catch((error) => {
-			console.error('カテゴリーの読み込みに失敗しました', error)
-		})
-	}, [load])
+	useFocusEffect(
+		useCallback(() => {
+			load().catch((error) => {
+				console.error('カテゴリーの読み込みに失敗しました', error)
+			})
+		}, [load])
+	)
 
 	const persistCategory = useCallback(
 		async (name: string): Promise<boolean> => {
