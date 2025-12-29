@@ -1,6 +1,7 @@
 import { asc, eq, inArray, sql } from 'drizzle-orm'
 
 import { MAX_SAVED_CATEGORIES } from '@/src/constants/categories'
+import { setCategorySeededFlag } from '@/src/database/app-settings'
 import { getDb, type Database } from '@/src/database/client'
 import { categories, foods } from '@/src/database/schema'
 import { parseCategories } from '@/src/features/foods/utils'
@@ -94,6 +95,8 @@ export const insertCategoriesIfMissing = async (
 		.insert(categories)
 		.values(limitedInsert.map((name) => ({ name, visible: true })))
 		.onConflictDoNothing()
+
+	await setCategorySeededFlag()
 
 	return limitedInsert
 }

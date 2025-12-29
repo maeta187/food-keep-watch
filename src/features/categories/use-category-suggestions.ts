@@ -2,6 +2,7 @@ import { useFocusEffect } from 'expo-router'
 import { useCallback, useState } from 'react'
 
 import { SUGGESTED_CATEGORIES } from '@/src/constants/categories'
+import { getCategorySeededFlag } from '@/src/database/app-settings'
 import {
 	getAllCategoryNames,
 	insertCategoriesIfMissing
@@ -19,8 +20,13 @@ export const useCategorySuggestions = () => {
 		try {
 			const names = await getAllCategoryNames()
 			if (names.length === 0) {
-				await insertCategoriesIfMissing(SUGGESTED_CATEGORIES)
-				setSuggestions(SUGGESTED_CATEGORIES)
+				const hasSeeded = await getCategorySeededFlag()
+				if (!hasSeeded) {
+					await insertCategoriesIfMissing(SUGGESTED_CATEGORIES)
+					setSuggestions(SUGGESTED_CATEGORIES)
+					return
+				}
+				setSuggestions([])
 				return
 			}
 			setSuggestions(names)
