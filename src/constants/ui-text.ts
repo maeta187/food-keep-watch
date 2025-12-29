@@ -7,6 +7,49 @@ export const UI_TEXT = {
 		homePlaceholder: '期限一覧のコンテンツを実装してください。',
 		settingsPlaceholder: '設定画面のコンテンツを実装してください。'
 	},
+	settings: {
+		title: '設定',
+		description: 'アプリの表示やデータ整理を行えます。',
+		items: {
+			categories: {
+				title: 'カテゴリー管理',
+				description:
+					'候補リストの表示切替や、未使用のカテゴリーを整理できます。'
+			}
+		},
+		categories: {
+			title: 'カテゴリー管理',
+			description:
+				'登録済みカテゴリーの表示/非表示を切り替えたり、未使用のものを削除できます。',
+			loading: 'カテゴリーを読み込んでいます',
+			empty: '登録済みのカテゴリーがありません。',
+			usageLabel: 'このカテゴリーは{count}件の食品で使われています。',
+			noUsageLabel: '紐づきはありません。',
+			visibleOnLabel: '表示',
+			visibleOffLabel: '非表示',
+			actions: {
+				delete: '削除する',
+				deleteBlocked: '削除できません',
+				deleteBlockedTitle: '削除できません',
+				deleteBlockedDescription:
+					'このカテゴリーには{count}件の食品が紐づいているため削除できません。',
+				deleteConfirmTitle: 'カテゴリーを削除しますか？',
+				deleteConfirmDescription: '「{name}」を削除します。よろしいですか？',
+				deleteCancel: 'キャンセル',
+				deleting: '削除中…'
+			},
+			errors: {
+				loadFailed:
+					'カテゴリーの読み込みに失敗しました。時間をおいて再度お試しください。',
+				updateFailed:
+					'表示状態の更新に失敗しました。時間をおいてから再度お試しください。',
+				visibleLimit:
+					'表示できるカテゴリーは最大15件までです。非表示にしてから再度お試しください。',
+				deleteFailed:
+					'カテゴリーの削除に失敗しました。時間をおいてから再度お試しください。'
+			}
+		}
+	},
 	home: {
 		title: '保存した食品',
 		description: '登録済みの食品の期限と保管場所を確認できます。',

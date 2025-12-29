@@ -1,8 +1,14 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useFocusEffect } from 'expo-router'
+import { useCallback, useState } from 'react'
 
 import { SUGGESTED_CATEGORIES } from '@/src/constants/categories'
 import {
+	getCategoryInitializedFlag,
+	getCategorySeededFlag
+} from '@/src/database/app-settings'
+import {
 	getAllCategoryNames,
+	hasAnyCategories,
 	insertCategoriesIfMissing
 } from '@/src/database/categories'
 
@@ -18,8 +24,17 @@ export const useCategorySuggestions = () => {
 		try {
 			const names = await getAllCategoryNames()
 			if (names.length === 0) {
-				await insertCategoriesIfMissing(SUGGESTED_CATEGORIES)
-				setSuggestions(SUGGESTED_CATEGORIES)
+				const [hasSeeded, hasInitialized, hasCategories] = await Promise.all([
+					getCategorySeededFlag(),
+					getCategoryInitializedFlag(),
+					hasAnyCategories()
+				])
+				if (!hasSeeded && !hasInitialized && !hasCategories) {
+					await insertCategoriesIfMissing(SUGGESTED_CATEGORIES)
+					setSuggestions(SUGGESTED_CATEGORIES)
+					return
+				}
+				setSuggestions([])
 				return
 			}
 			setSuggestions(names)
@@ -30,11 +45,13 @@ export const useCategorySuggestions = () => {
 		}
 	}, [])
 
-	useEffect(() => {
-		load().catch((error) => {
-			console.error('カテゴリーの読み込みに失敗しました', error)
-		})
-	}, [load])
+	useFocusEffect(
+		useCallback(() => {
+			load().catch((error) => {
+				console.error('カテゴリーの読み込みに失敗しました', error)
+			})
+		}, [load])
+	)
 
 	const persistCategory = useCallback(
 		async (name: string): Promise<boolean> => {

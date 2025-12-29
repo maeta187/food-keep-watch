@@ -22,15 +22,17 @@ export function CategorySelectField({
 	isLoading
 }: Props) {
 	return (
-		<View className='space-y-3'>
-			<Text className='text-sm font-semibold text-slate-700'>
-				{UI_TEXT.register.fields.category.label}
-			</Text>
-			<Text className='text-xs text-slate-500'>
-				{UI_TEXT.register.fields.category.selectionHelper}
-			</Text>
+		<View>
+			<View className='mb-3'>
+				<Text className='text-sm font-semibold text-slate-700'>
+					{UI_TEXT.register.fields.category.label}
+				</Text>
+				<Text className='text-xs text-slate-500'>
+					{UI_TEXT.register.fields.category.selectionHelper}
+				</Text>
+			</View>
 
-			<View className='space-y-2'>
+			<View className='mb-2'>
 				{values.length > 0 ? (
 					<View className='flex-row flex-wrap gap-2'>
 						{values.map((category) => (
@@ -56,8 +58,8 @@ export function CategorySelectField({
 				)}
 			</View>
 
-			<View className='space-y-2'>
-				<Text className='text-xs font-semibold text-slate-600'>
+			<View>
+				<Text className='mb-2 text-xs font-semibold text-slate-600'>
 					{UI_TEXT.register.fields.category.suggestionsLabel}
 				</Text>
 				{isLoading ? (
