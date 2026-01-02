@@ -4,12 +4,12 @@
 		"slug": "food-keep-watch",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/icon.png",
+		"icon": "./assets/food-keep-watch-icon.png",
 		"userInterfaceStyle": "light",
 		"newArchEnabled": true,
 		"scheme": "2025-newest-expo-setup-scheme",
 		"splash": {
-			"image": "./assets/splash-icon.png",
+			"image": "./assets/food-keep-watch-icon.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
@@ -30,7 +30,7 @@
 			"predictiveBackGestureEnabled": false
 		},
 		"web": {
-			"favicon": "./assets/favicon.png"
+			"favicon": "./assets/food-keep-watch-icon.png"
 		},
 		"plugins": [
 			[
